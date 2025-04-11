@@ -1,0 +1,68 @@
+@use '../modules/variables' as vars;
+
+.header {
+  background: vars.$color-white;
+  padding: 24px;
+  border-bottom: 1px solid vars.$color-border;
+  box-shadow: vars.$shadow;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  &__link {
+    text-decoration: none;
+    font-weight: 500;
+    padding: 12px;
+    border-radius: 8px;
+
+    background: vars.$color-primary;
+    transition: vars.$transition;
+    color: #fff;
+
+    &:hover {
+      background: vars.$color-border;
+      color: vars.$color-text;
+    }
+
+    &.router-link-active {
+      background: vars.$color-green;
+      color: #fff;
+    }
+  }
+
+  &__select-wrap {
+    min-width: 120px;
+  }
+}
+
+@media screen and (max-width: 767px){
+  .header {
+    padding: 10px 0;
+
+    &__nav {
+      gap: 15px;
+    }
+
+    &__select-wrap {
+      min-width: auto;
+    }
+
+    &__link {
+      padding: 4px 6px;
+      font-size: 14px;
+    }
+  }
+
+}

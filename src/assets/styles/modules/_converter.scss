@@ -1,0 +1,62 @@
+@use '../modules/variables' as vars;
+
+.converter {
+  background: vars.$color-white;
+  padding: 24px;
+  border-radius: vars.$radius;
+  box-shadow: vars.$shadow;
+  max-width: 400px;
+  margin: 24px auto;
+
+  &__row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    & + & {
+      margin-top: 24px;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 16px;
+      border: 1px solid vars.$color-border;
+      border-radius: vars.$radius;
+      background: vars.$color-bg;
+      color: vars.$color-text;
+      transition: vars.$transition;
+
+      &:focus {
+        outline: none;
+        border-color: vars.$color-primary;
+        background: vars.$color-white;
+      }
+    }
+  }
+
+  &__error {
+    margin: 10px 0 0 0;
+    color: red;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 767px){
+  .converter {
+    padding: 15px;
+
+    &__row {
+
+      & + & {
+        margin-top: 10px;
+      }
+
+      input {
+        width: 100px;
+        padding: 7px 10px;
+        font-size: 14px;
+      }
+    }
+  }
+}

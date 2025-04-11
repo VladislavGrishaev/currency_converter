@@ -1,0 +1,20 @@
+@use './modules/variables' as vars;
+@use './modules/reset';
+@use './modules/header';
+@use './modules/select';
+@use './modules/currency-rate';
+@use './modules/converter';
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: vars.$color-bg;
+  color: vars.$color-text;
+  margin: 0;
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 10px;
+}

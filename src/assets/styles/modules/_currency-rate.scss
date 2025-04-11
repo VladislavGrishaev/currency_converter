@@ -1,0 +1,42 @@
+@use '../modules/variables' as vars;
+
+.currency-rate {
+  background: vars.$color-white;
+  padding: 24px;
+  border-radius: vars.$radius;
+  box-shadow: vars.$shadow;
+  max-width: 400px;
+  margin: 24px auto;
+  font-size: 18px;
+  line-height: 1.5;
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid vars.$color-border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    span:first-child {
+      font-weight: 600;
+    }
+
+    span:last-child {
+      color: vars.$color-muted;
+    }
+  }
+}
+
+@media screen and (max-width: 767px){
+  .currency-rate {
+    padding: 15px;
+
+    &__item {
+      padding: 5px 0;
+      font-size: 14px;
+    }
+  }
+}
