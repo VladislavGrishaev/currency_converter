@@ -5,9 +5,16 @@ export const useCurrencyStore = defineStore('currency', {
     baseCurrency: 'RUB',
     supportedCurrencies: ['RUB', 'USD', 'EUR'],
     rates: {},
-    error: null
+    error: null,
+    amountFrom: '',
+    amountTo: '',
+    currencyFrom: 'RUB',
+    currencyTo: 'USD',
+    lastEdited: 'from'
   }),
   actions: {
+
+    /** получение курса валют по API **/
     async fetchRates() {
       this.error = null
 
@@ -25,8 +32,37 @@ export const useCurrencyStore = defineStore('currency', {
       }
     },
 
+    /** базовая валюта **/
     setBaseCurrency(currency) {
       this.baseCurrency = currency
+    },
+
+    /** установка валюты "из" **/
+    setCurrencyFrom(currency) {
+      this.currencyFrom = currency
+    },
+
+    /** установка валюты "в" **/
+    setCurrencyTo(currency) {
+      this.currencyTo = currency
+    },
+
+    /** сумма "из" и флаг редактирования **/
+    setAmountFrom(value) {
+      this.amountFrom = value
+      this.lastEdited = 'from'
+    },
+
+    /** сумма "в" и флаг редактирования **/
+    setAmountTo(value) {
+      this.amountTo = value
+      this.lastEdited = 'to'
+    },
+
+    /** валидация формы **/
+    validateAmount(value) {
+      const num = parseFloat(value)
+      return !isNaN(num) && isFinite(num)
     }
   },
 

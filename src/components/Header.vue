@@ -1,5 +1,9 @@
 <script setup>
+import {useCurrencyStore} from "@/stores/currencyStore.js";
 import Select from "@/components/Select.vue";
+
+const store = useCurrencyStore()
+
 </script>
 
 
@@ -11,7 +15,9 @@ import Select from "@/components/Select.vue";
 								<RouterLink to="/convert" class="header__link">Конвертация</RouterLink>
 						</nav>
 						<div class="header__select-wrap">
-								<Select />
+								<Select
+												v-model="store.baseCurrency"
+								/>
 						</div>
 				</div>
 
