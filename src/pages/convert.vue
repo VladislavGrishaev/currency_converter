@@ -1,22 +1,25 @@
 <script setup>
 import {watch, computed, ref} from "vue";
 import {useCurrencyStore} from "@/stores/currencyStore.js";
+import {useSelectDropdown} from "@/composables/useSelectDropdown.js";
 import Select from "@/components/Select.vue";
 
 const store = useCurrencyStore()
 
 
+// первый дропдаун
+const { selected: selectedFrom, isDropdownOpen: isDropdownOpenFrom, toggleDropdown: toggleDropdownFrom } = useSelectDropdown(store.currencyFrom, false);
 
-// активный дропдаун
-const activeDropdown = ref(null)
+// второй дропдаун
+const { selected: selectedTo, isDropdownOpen: isDropdownOpenTo, toggleDropdown: toggleDropdownTo } = useSelectDropdown(store.currencyTo, false);
 
-// установка активного дропдауна
-function setActiveDropdown(index) {
-  // если текущий дропдаун уже активен, то закрываем его, иначе открываем
-  activeDropdown.value = activeDropdown.value === index ? null : index;
-}
+const setCurrencyFrom = (currency) => {
+  store.setCurrencyFrom(currency);
+};
 
-
+const setCurrencyTo = (currency) => {
+  store.setCurrencyTo(currency);
+};
 
 </script>
 
@@ -25,29 +28,33 @@ function setActiveDropdown(index) {
 				<div class="converter__row">
 						<input
 										v-model="store.amountFrom"
-										type="text"
+
+										type="number"
 										class="converter__input"
 										placeholder="0.00" />
 
 						<Select
 										v-model="store.currencyFrom"
-										:isOpen="activeDropdown === 0"
-										@update:currencyValue="setActiveDropdown(0)"
-										@update:isOpen="setActiveDropdown(0)"
+										:isOpen="isDropdownOpenFrom"
+										@update:currencyValue="setCurrencyFrom"
+										@update:modelValue="setCurrencyFrom"
+										@update:isOpen="toggleDropdownFrom"
 						/>
 				</div>
 				<div class="converter__row">
 						<input
 										v-model="store.amountTo"
-										type="text"
+										@input="store.setAmountTo"
+										type="number"
 										class="converter__input"
 										placeholder="0.00" />
 
 						<Select
 										v-model="store.currencyTo"
-										:isOpen="activeDropdown === 1"
-										@update:currencyValue="setActiveDropdown(1)"
-										@update:isOpen="setActiveDropdown(1)"
+										:isOpen="isDropdownOpenTo"
+										@update:currencyValue="setCurrencyTo"
+										@update:modelValue="setCurrencyTo"
+										@update:isOpen="toggleDropdownTo"
 						/>
 				</div>
 				<div class="converter__error">

@@ -10,7 +10,8 @@ export const useCurrencyStore = defineStore('currency', {
     amountTo: '',
     currencyFrom: 'RUB',
     currencyTo: 'USD',
-    lastEdited: 'from'
+    lastEdited: 'from',
+    headerCurrency: 'RUB'
   }),
   actions: {
 
@@ -47,22 +48,51 @@ export const useCurrencyStore = defineStore('currency', {
       this.currencyTo = currency
     },
 
+    /** установка валюты в шапке **/
+    setHeaderCurrency(currency) {
+      this.headerCurrency = currency
+    },
+
     /** сумма "из" и флаг редактирования **/
     setAmountFrom(value) {
+      const numValue = typeof value === 'object' && value.target ? value.target.value : value
       this.amountFrom = value
       this.lastEdited = 'from'
+      this.convert()
+      console.log(value)
     },
 
     /** сумма "в" и флаг редактирования **/
     setAmountTo(value) {
+      const numValue = typeof value === 'object' && value.target ? value.target.value : value
       this.amountTo = value
       this.lastEdited = 'to'
+      this.convert()
+      console.log(value)
     },
 
     /** валидация формы **/
     validateAmount(value) {
       const num = parseFloat(value)
       return !isNaN(num) && isFinite(num)
+    },
+
+    /** конвертация валюты **/
+    convert() {
+      const from = parseFloat(this.amountFrom)
+      const to = parseFloat(this.amountTo)
+      const rate = this.getRate(this.currencyFrom, this.currencyTo)
+      const reverseRate = this.getRate(this.currencyTo, this.currencyFrom)
+
+      if (this.lastEdited === 'from' && this.validateAmount(this.amountFrom)) {
+        this.amountTo = (from * rate).toFixed(2)
+      }
+
+      if (this.lastEdited === 'to' && this.validateAmount(this.amountTo)) {
+        this.amountFrom = (to * reverseRate).toFixed(2)
+      }
+
+      if (!rate) return console.error('Курс не найден')
     }
   },
 
@@ -72,7 +102,8 @@ export const useCurrencyStore = defineStore('currency', {
 
       const  key = `${from.toLowerCase()}-${to.toLowerCase()}`
       return state.rates[key] ?? null
-    }
+    },
+    currentCurrency: (state) => state.headerCurrency
   }
 
 })

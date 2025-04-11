@@ -1,51 +1,50 @@
 <script setup>
-import {ref, watch} from "vue";
-import {useCurrencyStore} from "@/stores/currencyStore.js";
-import {useClickOutside} from "@/directives/clickOutside.js";
+import { computed, ref } from "vue";
+import { useCurrencyStore } from "@/stores/currencyStore.js";
+import { useClickOutside } from "@/directives/clickOutside.js";
 
 const props = defineProps({
   modelValue: String,
-		isOpen: Boolean,
-		index: Number
-})
+  isOpen: Boolean,
+  index: Number,
+});
 
-const store = useCurrencyStore()
-const emit = defineEmits(['update:currencyValue', 'update:isOpen'])
+const store = useCurrencyStore();
+const emit = defineEmits(['update:currencyValue', 'update:isOpen', 'update:modelValue']);
 
-const selectedValue = ref(props.modelValue)
+// меняем выбранную валюту
+const selectedValue = computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emit('update:currencyValue', val);
+    // emit('update:modelValue', val);
+  }
+});
 
-const isDropdownOpen = ref(false)
+// открытый дропдаун
+const isDropdownOpen = ref(props.isOpen);
 
-
-watch(() => props.modelValue, (newVal) => {
-  selectedValue.value = newVal
-})
-
-watch(()=> props.isOpen, (newVal) => {
-		isDropdownOpen.value = newVal
-})
-
+// Выбор валюты и закрытие дропдауна
 function selectOption(option) {
-		selectedValue.value = option
-		emit('update:currencyValue', option)
-		isDropdownOpen.value = false
+  selectedValue.value = option;
+  isDropdownOpen.value = false;
 }
 
-// переключение дропдауна валют
+// Переключение состояния дропдауна
 function toggleDropdown() {
-		isDropdownOpen.value = !isDropdownOpen.value
-		emit('update:isOpen', isDropdownOpen.value)
+  isDropdownOpen.value = !isDropdownOpen.value;
 }
 
-const dropdownRef = ref(null)
+const dropdownRef = ref(null);
 
-// если дропдаун открыт и произошел клик вне, закрываем его
+// Закрыть дропдаун при клике вне
 useClickOutside(dropdownRef, () => {
   if (isDropdownOpen.value) {
     isDropdownOpen.value = false;
   }
 });
 </script>
+
 
 <template>
 		<div
