@@ -1,22 +1,27 @@
 <script setup>
-import { useCurrencyStore } from '@/stores/currencyStore.js'
+import { useCurrencyStore } from '@/stores/currencyStore.js';
+import {onMounted} from "vue";
 
-const store = useCurrencyStore()
+const store = useCurrencyStore();
+
+const converted = (from) => store.convertedAmount(store.amountFrom, from, store.headerCurrency);
+
+onMounted(() => {
+  if (!store.isRatesLoaded) {
+    store.fetchRates()
+  }
+})
 </script>
 
 <template>
-		<div v-if="store.amountFrom && store.amountTo" class="currency-rate">
-
+		<div class="currency-rate">
 				<div class="currency-rate__item">
-						<span class="currency-rate__currency">{{ store.amountFrom }} {{ store.currencyFrom }}</span>
-						<span class="currency-rate__value">= {{ store.amountTo }} {{ store.currencyTo }}</span>
+						<span class="currency-rate__currency">{{ store.amountFrom }} USD</span>
+						<span class="currency-rate__value">= {{ converted('USD') }} {{ store.headerCurrency }}</span>
 				</div>
-
 				<div class="currency-rate__item">
 						<span class="currency-rate__currency">{{ store.amountFrom }} EUR</span>
-						<span class="currency-rate__value">
-        = {{ store.convertedAmount(store.amountFrom, 'EUR', 'RUB') }} RUB
-      </span>
+						<span class="currency-rate__value">= {{ converted('EUR') }} {{ store.headerCurrency }}</span>
 				</div>
 		</div>
 </template>

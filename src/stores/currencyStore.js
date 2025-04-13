@@ -11,7 +11,8 @@ export const useCurrencyStore = defineStore('currency', {
     currencyFrom: 'USD',
     currencyTo: 'RUB',
     lastEdited: 'from',
-    headerCurrency: 'RUB'
+    headerCurrency: 'RUB',
+    isRatesLoaded: false
   }),
   actions: {
 
@@ -54,6 +55,7 @@ export const useCurrencyStore = defineStore('currency', {
     /** установка валюты в шапке **/
     setHeaderCurrency(currency) {
       this.headerCurrency = currency
+      this.fetchRates();
     },
 
     /** сумма "из" и флаг редактирования **/
@@ -95,7 +97,9 @@ export const useCurrencyStore = defineStore('currency', {
       }
 
       if (!rate) return console.error('Курс не найден')
-    }
+    },
+
+
   },
 
   getters: {
@@ -108,10 +112,29 @@ export const useCurrencyStore = defineStore('currency', {
     currentCurrency: (state) => state.headerCurrency,
 
     convertedAmount: (state) => (amount, from, to) => {
-      const rate = state.rates[`${from.toLowerCase()}-${to.toLowerCase()}`]
-      const num = parseFloat(amount)
-      if (!rate || isNaN(num)) return ''
-      return (num * rate).toFixed(2)
+      if (from === to) return parseFloat(amount).toFixed(2);
+
+      const rate = state.rates[`${from.toLowerCase()}-${to.toLowerCase()}`];
+      const num = parseFloat(amount);
+      if (!rate || isNaN(num)) return '';
+      return (num * rate).toFixed(2);
+    },
+
+    getHeaderRates: (state) => {
+      const target = state.headerCurrency;
+      const result = {};
+
+      state.supportedCurrencies.forEach((currency) => {
+        if (currency !== target) {
+          const key = `${currency.toLowerCase()}-${target.toLowerCase()}`;
+          const rate = state.rates[key];
+          if (rate) {
+            result[currency] = (1 * rate).toFixed(2);
+          }
+        }
+      });
+
+      return result;
     }
   }
 

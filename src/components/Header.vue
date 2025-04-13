@@ -5,7 +5,11 @@ import { RouterLink } from "vue-router";
 import { useSelectDropdown } from "@/composables/useSelectDropdown.js";
 
 const store = useCurrencyStore();
-const { isDropdownOpen: isDropdownOpenHeader, toggleDropdown: toggleDropdownHeader } = useSelectDropdown(store.headerCurrency, false);
+const {
+  isDropdownOpen: isDropdownOpenHeader,
+		toggleDropdown: toggleDropdownHeader
+} = useSelectDropdown(store.headerCurrency, false);
+
 
 const setHeaderCurrency = (currency) => {
   store.setHeaderCurrency(currency);
