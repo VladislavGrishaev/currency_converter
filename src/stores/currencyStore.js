@@ -5,7 +5,7 @@ export const useCurrencyStore = defineStore('currency', {
     baseCurrency: 'USD',
     supportedCurrencies: ['RUB', 'USD', 'EUR'],
     rates: {},
-    error: null,
+    errorMessage: '',
     amountFrom: '1',
     amountTo: '',
     currencyFrom: 'USD',
@@ -36,11 +36,6 @@ export const useCurrencyStore = defineStore('currency', {
         console.error('Ошибка загрузки курсов валют:', e)
         this.error = e instanceof Error ? e.message : 'Unknown error'
       }
-    },
-
-    /** базовая валюта **/
-    setBaseCurrency(currency) {
-      this.baseCurrency = currency
     },
 
     /** установка валюты "из" **/
@@ -122,6 +117,19 @@ export const useCurrencyStore = defineStore('currency', {
       // ограничиваем количество знаков после точки до двух
       str = str.replace(/^(\d*\.\d{0,2})\d*$/, '$1');
 
+      // если после обработки пусто или символы не являются числом, показываем ошибку
+      if (str === '' || isNaN(parseFloat(str))) {
+        this.errorMessage = 'Пожалуйста, введите корректное число';
+        return '';
+      }
+
+      // Проверяем, что ввели только цифры или точку (если есть)
+      if (/[^0-9.]/.test(value)) {
+        this.errorMessage = 'Можно вводить только цифры или цифры и точку'; // Сообщение об ошибке
+        return value.replace(/[^0-9.]/g, '');
+      }
+
+      this.errorMessage = '';
       return str;
     }
 

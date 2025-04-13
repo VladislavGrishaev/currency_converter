@@ -75,6 +75,11 @@ onMounted(() => store.fetchRates())
 													@update:isOpen="toggleDropdownTo"
 									/>
 							</div>
+							<div
+											v-if="store.errorMessage"
+											class="error-message">
+									{{ store.errorMessage }}
+							</div>
 					</form>
 			</div>
 	</div>
