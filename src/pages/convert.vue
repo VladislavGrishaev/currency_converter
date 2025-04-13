@@ -8,10 +8,18 @@ const store = useCurrencyStore()
 
 
 // первый дропдаун
-const { selected: selectedFrom, isDropdownOpen: isDropdownOpenFrom, toggleDropdown: toggleDropdownFrom } = useSelectDropdown(store.currencyFrom, false);
+const {
+  selected: selectedFrom,
+  isDropdownOpen: isDropdownOpenFrom,
+  toggleDropdown: toggleDropdownFrom
+} = useSelectDropdown(store.currencyFrom, false);
 
 // второй дропдаун
-const { selected: selectedTo, isDropdownOpen: isDropdownOpenTo, toggleDropdown: toggleDropdownTo } = useSelectDropdown(store.currencyTo, false);
+const {
+  selected: selectedTo,
+  isDropdownOpen: isDropdownOpenTo,
+  toggleDropdown: toggleDropdownTo
+} = useSelectDropdown(store.currencyTo, false);
 
 const setCurrencyFrom = (currency) => {
   store.setCurrencyFrom(currency);
@@ -21,45 +29,58 @@ const setCurrencyTo = (currency) => {
   store.setCurrencyTo(currency);
 };
 
-onMounted(()=> store.fetchRates())
+onMounted(() => store.fetchRates())
 
 
 </script>
 
 <template>
-		<div class="converter">
-				<div class="converter__row">
-						<input
-										v-model="store.amountFrom"
-										@input="store.setAmountFrom"
-										type="number"
-										class="converter__input"
-										placeholder="0.00" />
+	<div>
+			<div class="converter">
+					<div
+									v-if="!store.isRatesLoaded"
+									class="loader">
+							Загрузка курсов...
+					</div>
 
-						<Select
-										v-model="store.currencyFrom"
-										:isOpen="isDropdownOpenFrom"
-										@update:modelValue="setCurrencyFrom"
-										@update:isOpen="toggleDropdownFrom"
-						/>
-				</div>
-				<div class="converter__row">
-						<input
-										v-model="store.amountTo"
-										@input="store.setAmountTo"
-										type="number"
-										class="converter__input"
-										placeholder="0.00" />
+					<form
+									v-else
+									class="converter__form">
+							<div class="converter__row">
+									<input
+													v-model="store.amountFrom"
+													@input="store.setAmountFrom"
+													type="number"
+													class="converter__input"
+													placeholder="0.00"/>
+									<Select
+													v-model="store.currencyFrom"
+													:isOpen="isDropdownOpenFrom"
+													@update:modelValue="setCurrencyFrom"
+													@update:isOpen="toggleDropdownFrom"
+									/>
+							</div>
+							<div class="converter__row">
+									<input
+													v-model="store.amountTo"
+													@input="store.setAmountTo"
+													type="number"
+													class="converter__input"
+													placeholder="0.00"/>
 
-						<Select
-										v-model="store.currencyTo"
-										:isOpen="isDropdownOpenTo"
-										@update:modelValue="setCurrencyTo"
-										@update:isOpen="toggleDropdownTo"
-						/>
-				</div>
-		</div>
+									<Select
+													v-model="store.currencyTo"
+													:isOpen="isDropdownOpenTo"
+													@update:modelValue="setCurrencyTo"
+													@update:isOpen="toggleDropdownTo"
+									/>
+							</div>
+					</form>
+			</div>
+	</div>
+
 </template>
+
 
 
 

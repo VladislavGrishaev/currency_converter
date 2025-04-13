@@ -15,13 +15,21 @@ onMounted(() => {
 
 <template>
 		<div class="currency-rate">
-				<div class="currency-rate__item">
-						<span class="currency-rate__currency">{{ store.amountFrom }} USD</span>
-						<span class="currency-rate__value">= {{ converted('USD') }} {{ store.headerCurrency }}</span>
+				<div
+								v-if="!store.isRatesLoaded"
+								class="loader">
+						Загрузка курсов...
 				</div>
-				<div class="currency-rate__item">
-						<span class="currency-rate__currency">{{ store.amountFrom }} EUR</span>
-						<span class="currency-rate__value">= {{ converted('EUR') }} {{ store.headerCurrency }}</span>
+
+				<div v-else>
+						<div class="currency-rate__item">
+								<span class="currency-rate__currency">{{ store.amountFrom }} USD</span>
+								<span class="currency-rate__value">= {{ converted('USD') }} {{ store.headerCurrency }}</span>
+						</div>
+						<div class="currency-rate__item">
+								<span class="currency-rate__currency">{{ store.amountFrom }} EUR</span>
+								<span class="currency-rate__value">= {{ converted('EUR') }} {{ store.headerCurrency }}</span>
+						</div>
 				</div>
 		</div>
 </template>

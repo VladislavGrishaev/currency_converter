@@ -30,8 +30,9 @@
   }
 }
 
-@media screen and (max-width: 767px){
+@media screen and (max-width: 767px) {
   .currency-rate {
+    margin: 20px 0 0 0;
     padding: 15px;
 
     &__item {

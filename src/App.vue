@@ -6,6 +6,7 @@ import Header from "@/components/Header.vue";
 		<Header/>
 		<main>
 				<div class="container">
+						<h1 class="title">Конвертер валют</h1>
 						<router-view/>
 				</div>
 		</main>

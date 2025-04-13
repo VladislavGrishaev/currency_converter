@@ -25,6 +25,7 @@ export const useCurrencyStore = defineStore('currency', {
         this.rates = await response.json()
 
         this.convert()
+        this.isRatesLoaded = true
 
         if (!this.rates) {
           throw new Error(`HTTP error! status: ${response.status}`)
