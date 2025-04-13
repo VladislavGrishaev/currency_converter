@@ -50,7 +50,7 @@ onMounted(() => store.fetchRates())
 									<input
 													v-model="store.amountFrom"
 													@input="store.setAmountFrom"
-													type="number"
+													type="text"
 													class="converter__input"
 													placeholder="0.00"/>
 									<Select
@@ -64,7 +64,7 @@ onMounted(() => store.fetchRates())
 									<input
 													v-model="store.amountTo"
 													@input="store.setAmountTo"
-													type="number"
+													type="text"
 													class="converter__input"
 													placeholder="0.00"/>
 

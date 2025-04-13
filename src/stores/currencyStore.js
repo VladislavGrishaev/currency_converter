@@ -46,11 +46,13 @@ export const useCurrencyStore = defineStore('currency', {
     /** установка валюты "из" **/
     setCurrencyFrom(currency) {
       this.currencyFrom = currency
+      this.convert();
     },
 
     /** установка валюты "в" **/
     setCurrencyTo(currency) {
       this.currencyTo = currency
+      this.convert();
     },
 
     /** установка валюты в шапке **/
@@ -62,6 +64,8 @@ export const useCurrencyStore = defineStore('currency', {
     /** сумма "из" и флаг редактирования **/
     setAmountFrom(value) {
       this.amountFrom = typeof value === 'object' && value.target ? value.target.value : value
+      this.amountFrom = this.formValidation(this.amountFrom);
+
       this.lastEdited = 'from'
 
       this.amountFrom === '' ? this.amountTo = '' : false
@@ -72,11 +76,12 @@ export const useCurrencyStore = defineStore('currency', {
     /** сумма "в" и флаг редактирования **/
     setAmountTo(value) {
       this.amountTo = typeof value === 'object' && value.target ? value.target.value : value
+      this.amountTo = this.formValidation(this.amountTo);
       this.lastEdited = 'to'
       this.convert()
     },
 
-    /** валидация формы **/
+    /** валидация: является ли числом и конечным числовым значением **/
     validateAmount(value) {
       const num = parseFloat(value)
       return !isNaN(num) && isFinite(num)
@@ -100,6 +105,25 @@ export const useCurrencyStore = defineStore('currency', {
       if (!rate) return console.error('Курс не найден')
     },
 
+    /** валидация полей **/
+    formValidation(value) {
+
+      // преобразуем запятую в точку и удаляем все лишние символы
+      let str = value.toString()
+        .replace(',', '.')
+        .replace(/[^\d.]/g, '');
+
+      // если точка уже есть, не разрешаем добавлять новую
+      if ((str.match(/\./g) || []).length > 1) {
+
+        // удаляем последнюю точку, если их больше одной
+        return str.slice(0, str.lastIndexOf('.'));
+      }
+      // ограничиваем количество знаков после точки до двух
+      str = str.replace(/^(\d*\.\d{0,2})\d*$/, '$1');
+
+      return str;
+    }
 
   },
 
