@@ -105,7 +105,14 @@ export const useCurrencyStore = defineStore('currency', {
       const  key = `${from.toLowerCase()}-${to.toLowerCase()}`
       return state.rates[key] ?? null
     },
-    currentCurrency: (state) => state.headerCurrency
+    currentCurrency: (state) => state.headerCurrency,
+
+    convertedAmount: (state) => (amount, from, to) => {
+      const rate = state.rates[`${from.toLowerCase()}-${to.toLowerCase()}`]
+      const num = parseFloat(amount)
+      if (!rate || isNaN(num)) return ''
+      return (num * rate).toFixed(2)
+    }
   }
 
 })
