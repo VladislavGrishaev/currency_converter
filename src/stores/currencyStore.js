@@ -2,14 +2,14 @@ import {defineStore} from "pinia";
 
 export const useCurrencyStore = defineStore('currency', {
   state: () => ({
-    baseCurrency: 'RUB',
+    baseCurrency: 'USD',
     supportedCurrencies: ['RUB', 'USD', 'EUR'],
     rates: {},
     error: null,
-    amountFrom: '',
+    amountFrom: '1',
     amountTo: '',
-    currencyFrom: 'RUB',
-    currencyTo: 'USD',
+    currencyFrom: 'USD',
+    currencyTo: 'RUB',
     lastEdited: 'from',
     headerCurrency: 'RUB'
   }),
@@ -22,6 +22,9 @@ export const useCurrencyStore = defineStore('currency', {
       try {
         const response = await fetch('https://status.neuralgeneration.com/api/currency')
         this.rates = await response.json()
+
+        this.convert()
+
         if (!this.rates) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
@@ -55,20 +58,19 @@ export const useCurrencyStore = defineStore('currency', {
 
     /** сумма "из" и флаг редактирования **/
     setAmountFrom(value) {
-      const numValue = typeof value === 'object' && value.target ? value.target.value : value
-      this.amountFrom = value
+      this.amountFrom = typeof value === 'object' && value.target ? value.target.value : value
       this.lastEdited = 'from'
+
+      this.amountFrom === '' ? this.amountTo = '' : false
+
       this.convert()
-      console.log(value)
     },
 
     /** сумма "в" и флаг редактирования **/
     setAmountTo(value) {
-      const numValue = typeof value === 'object' && value.target ? value.target.value : value
-      this.amountTo = value
+      this.amountTo = typeof value === 'object' && value.target ? value.target.value : value
       this.lastEdited = 'to'
       this.convert()
-      console.log(value)
     },
 
     /** валидация формы **/

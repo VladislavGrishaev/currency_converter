@@ -1,5 +1,5 @@
 <script setup>
-import {watch, computed, ref} from "vue";
+import {onMounted} from "vue";
 import {useCurrencyStore} from "@/stores/currencyStore.js";
 import {useSelectDropdown} from "@/composables/useSelectDropdown.js";
 import Select from "@/components/Select.vue";
@@ -21,6 +21,9 @@ const setCurrencyTo = (currency) => {
   store.setCurrencyTo(currency);
 };
 
+onMounted(()=> store.fetchRates())
+
+
 </script>
 
 <template>
@@ -28,7 +31,7 @@ const setCurrencyTo = (currency) => {
 				<div class="converter__row">
 						<input
 										v-model="store.amountFrom"
-
+										@input="store.setAmountFrom"
 										type="number"
 										class="converter__input"
 										placeholder="0.00" />
@@ -36,7 +39,6 @@ const setCurrencyTo = (currency) => {
 						<Select
 										v-model="store.currencyFrom"
 										:isOpen="isDropdownOpenFrom"
-										@update:currencyValue="setCurrencyFrom"
 										@update:modelValue="setCurrencyFrom"
 										@update:isOpen="toggleDropdownFrom"
 						/>
@@ -52,13 +54,9 @@ const setCurrencyTo = (currency) => {
 						<Select
 										v-model="store.currencyTo"
 										:isOpen="isDropdownOpenTo"
-										@update:currencyValue="setCurrencyTo"
 										@update:modelValue="setCurrencyTo"
 										@update:isOpen="toggleDropdownTo"
 						/>
-				</div>
-				<div class="converter__error">
-						Введите корректное число
 				</div>
 		</div>
 </template>

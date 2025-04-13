@@ -1,7 +1,9 @@
 <script setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { useCurrencyStore } from "@/stores/currencyStore.js";
 import { useClickOutside } from "@/directives/clickOutside.js";
+
+const model = defineModel()
 
 const props = defineProps({
   modelValue: String,
@@ -10,29 +12,22 @@ const props = defineProps({
 });
 
 const store = useCurrencyStore();
-const emit = defineEmits(['update:currencyValue', 'update:isOpen', 'update:modelValue']);
+const emit = defineEmits(['update:isOpen']);
 
-// меняем выбранную валюту
-const selectedValue = computed({
-  get: () => props.modelValue,
-  set: (val) => {
-    emit('update:currencyValue', val);
-    // emit('update:modelValue', val);
-  }
-});
 
 // открытый дропдаун
 const isDropdownOpen = ref(props.isOpen);
 
 // Выбор валюты и закрытие дропдауна
 function selectOption(option) {
-  selectedValue.value = option;
+  model.value = option;
   isDropdownOpen.value = false;
 }
 
 // Переключение состояния дропдауна
 function toggleDropdown() {
   isDropdownOpen.value = !isDropdownOpen.value;
+		emit('update:isOpen', isDropdownOpen.value);
 }
 
 const dropdownRef = ref(null);
@@ -54,7 +49,7 @@ useClickOutside(dropdownRef, () => {
 						class="select"
 		>
 				<div class="select__selected">
-						<span class="select__value">{{ selectedValue }}</span>
+						<span class="select__value">{{ model }}</span>
 						<span class="select__arrow">▼</span>
 				</div>
 				<ul
